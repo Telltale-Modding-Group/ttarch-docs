@@ -1,6 +1,9 @@
 # ttarch-docs
 A guide to reading Telltale Archive files programmatically
 
+# Credits
+Special thanks to [Lucas Saragosa](https://github.com/LucasSaragosa) for his patience and being so open to sharing his in-depth knowledge regarding the TellTale Tool, making this document and other tools in the community possible.
+
 # Preface
 This guide assumes knowledge of number bases, specifically [binary, decimal and hexadecimal](https://www.mathsisfun.com/binary-decimal-hexadecimal.html), in addition to [Little Endian and Big Endian notation.](https://betterexplained.com/articles/understanding-big-and-little-endian-byte-order/)
 
@@ -8,19 +11,21 @@ Unless otherwise specified, assume Little Endian encoding and integers represent
 
 A recommended Hex Editor for viewing the raw ttarch binary data is the [HxD Hex Editor.](https://mh-nexus.de/en/hxd/)
 
-# Archive type
-There are multiple encodings of `ttarch2` files, including `TTCE` and `TTCN`.
-An archive's type can be determined by reading the first four bytes as ASCII chars, then reversing the order, e.g.
+# Data Containers
+`ttarch2` files make use of data container formats, found throughout other TellTale Tool formats.
+Containers such as `TTCE` and `TTCN` are often used for these data archives, which encode their data in different ways.
+An archive's data container type can be determined by reading the first four bytes as ASCII chars, then reversing the order, e.g.
 `4E 43 54 54 CD 5A 05 00 00 00 00 00 34 41 54 54`
-produces `4E 43 54 54`, AKA `NCTT` in ASCII. Reversing this string yields `TTCN`.
+produces `4E 43 54 54`, AKA `NCTT` in ASCII.
+Reversing this string yields `TTCN`, which likely stems from *Telltale Container None* or a similar acronym.
 
 # TTCN
-The TTCN encoding is quite straightforward, having no encryption or compression.
+The TTCN data container is quite straightforward, having no encryption or compression.
 
 ## Header
 It contains a "header" of 24 bytes, in the format:
 ```
-<type: 4 byte string> <archive size: 8 byte unsigned int> <version: 4 byte string> <block size: 4 byte int> <file count: 4 byte int>
+<type: 4 byte string> <archive size: 8 byte int> <version: 4 byte string> <block size: 4 byte int> <file count: 4 byte int>
 ```
 
 e.g.
